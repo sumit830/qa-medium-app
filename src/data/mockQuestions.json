@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "What is closure in JavaScript?",
+    "tags": ["JavaScript", "Interview"],
+    "difficulty": "Easy",
+    "company": "Google",
+    "excerpt": "A closure is the combination of a function and the lexical environment within which that function was declared..."
+  },
+  {
+    "id": "2",
+    "title": "Explain system design for a URL shortener.",
+    "tags": ["System Design", "Backend"],
+    "difficulty": "Medium",
+    "company": "Amazon",
+    "excerpt": "A URL shortener is a service that creates a short alias for a long URL. The system must handle redirects, analytics, and scaling..."
+  },
+  {
+    "id": "3",
+    "title": "How do you handle conflict in an HR setting?",
+    "tags": ["HR", "Behavioral"],
+    "difficulty": "Easy",
+    "company": "Microsoft",
+    "excerpt": "Handling conflict requires active listening, empathy, and clear communication to resolve misunderstandings..."
+  }
+] 
