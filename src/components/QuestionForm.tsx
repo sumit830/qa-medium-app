@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
+import '../App.css';
 
 export interface QuestionFormProps {
   title: string;
@@ -31,20 +32,53 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
 }) => {
   const { quill, quillRef } = useQuill({
     theme: 'snow',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        // Remove the direction button
+        // [{ 'direction': 'rtl' }], // <-- Do not include this
+        [{ 'align': [] }],
+        ['clean']
+      ]
+    }
   });
 
   useEffect(() => {
     if (quill) {
-      quill.root.innerHTML = body || '';
-      quill.on('text-change', () => {
-        onBodyChange(quill.root.innerHTML);
-      });
-    }
-    return () => {
-      if (quill) {
-        quill.off('text-change');
+      // Set the initial value only if the editor is empty or default
+      if (
+        !quill.root.innerHTML ||
+        quill.root.innerHTML === '<p><br></p>' ||
+        quill.root.innerHTML === ''
+      ) {
+        quill.root.innerHTML = body || '';
       }
-    };
+
+      const setAllLTR = () => {
+        // Set dir attribute on root if not already set
+        if (quill.root.getAttribute('dir') !== 'ltr') {
+          quill.root.setAttribute('dir', 'ltr');
+        }
+        // Set dir and textAlign on all child elements if needed
+        Array.from(quill.root.querySelectorAll('*')).forEach((el: any) => {
+          if (el.getAttribute('dir') !== 'ltr') {
+            el.setAttribute('dir', 'ltr');
+          }
+          if (el.style.textAlign !== 'left') {
+            el.style.textAlign = 'left';
+          }
+        });
+        // Send back the current editor content
+        onBodyChange(quill.root.innerHTML);
+      };
+
+      quill.on('text-change', setAllLTR);
+      setAllLTR();
+      return () => {
+        quill.off('text-change', setAllLTR);
+      };
+    }
   }, [quill, body, onBodyChange]);
 
   return (
@@ -61,7 +95,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       </div>
       <div className="mb-3">
         <label className="form-label">Body</label>
-        <div ref={quillRef} />
+        <div ref={quillRef}  />
       </div>
       <div className="mb-3">
         <label className="form-label">Tags (comma separated)</label>
